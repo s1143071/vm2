@@ -1,0 +1,46 @@
+(1..2).each do |i|
+  Vagrant.configure("2") do |webconfig|
+   webconfig.ssh.insert_key = false
+   webconfig.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+   webconfig.vm.define "testklant1-webserver#{i}" do |webconfig|
+     webconfig.vm.box = "bento/ubuntu-20.04"
+     webconfig.vm.hostname = "testklant1-webserver#{i}"
+     webconfig.vm.network "private_network", ip: "192.168.netip.1#{i}"
+     webconfig.vm.provision "file", source: "/home/student/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+     webconfig.vm.provider "virtualbox" do |vb|
+       vb.memory = "512"
+       vb.name = "testklant1-webserver#{i}"
+     end
+   end
+ end
+end
+
+Vagrant.configure("2") do |lbconfig|
+  lbconfig.ssh.insert_key = false
+  lbconfig.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+  lbconfig.vm.define "testklant1-loadbalancer" do |lbconfig|
+    lbconfig.vm.box = "bento/ubuntu-20.04"
+    lbconfig.vm.hostname = "testklant1-loadbalancer"
+    lbconfig.vm.network "private_network", ip: "192.168.netip.13"
+    lbconfig.vm.provision "file", source: "/home/student/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+    lbconfig.vm.provider "virtualbox" do |vb|
+      vb.memory = "512"
+      vb.name = "testklant1-loadbalancer"
+    end
+  end
+end
+
+Vagrant.configure("2") do |dbconfig|
+  dbconfig.ssh.insert_key = false
+  dbconfig.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+  dbconfig.vm.define "testklant1-databaseserver" do |dbconfig|
+    dbconfig.vm.box = "bento/ubuntu-20.04"
+    dbconfig.vm.hostname = "testklant1-databaseserver"
+    dbconfig.vm.network "private_network", ip: "192.168.netip.14"
+    dbconfig.vm.provision "file", source: "/home/student/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+    dbconfig.vm.provider "virtualbox" do |vb|
+      vb.memory = "512"
+      vb.name = "testklant1-databaseserver"
+    end
+  end
+end

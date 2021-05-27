@@ -1,0 +1,19 @@
+[all]
+testklant1-webserver1 ansible_host=192.168.netip.11
+testklant1-webserver2 ansible_host=192.168.netip.12
+testklant1-loadbalancer ansible_host=192.168.netip.13
+testklant1-databaseserver ansible_host=192.168.netip.14
+
+[all:vars]
+ansible_user=vagrant
+ansible_python_interpreter=/usr/bin/python3
+
+[apache]
+testklant1-webserver1 ansible_host=192.168.netip.11
+testklant1-webserver2 ansible_host=192.168.netip.12
+
+[lb]
+testklant1-loadbalancer ansible_host=192.168.netip.13
+
+[db]
+testklant1-databaseserver ansible_host=192.168.netip.14

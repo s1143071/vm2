@@ -1,0 +1,19 @@
+---
+- hosts: db
+  become: yes
+
+  roles:
+    - database
+
+- hosts: apache
+  become: yes
+
+  roles:
+    - webserver
+
+- hosts: lb
+  become: yes
+
+  roles:
+    - loadbalancer
+...

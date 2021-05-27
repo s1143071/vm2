@@ -1,0 +1,19 @@
+[all]
+ed-webserver1 ansible_host=192.168.25.11
+ed-webserver2 ansible_host=192.168.25.12
+ed-loadbalancer ansible_host=192.168.25.13
+ed-databaseserver ansible_host=192.168.25.14
+
+[all:vars]
+ansible_user=vagrant
+ansible_python_interpreter=/usr/bin/python3
+
+[apache]
+ed-webserver1 ansible_host=192.168.25.11
+ed-webserver2 ansible_host=192.168.25.12
+
+[lb]
+ed-loadbalancer ansible_host=192.168.25.13
+
+[db]
+ed-databaseserver ansible_host=192.168.25.14

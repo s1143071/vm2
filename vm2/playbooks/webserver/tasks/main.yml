@@ -1,0 +1,39 @@
+---
+- name: Installeer apache2
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: Installeer php
+  apt:
+    name: php
+    state: present
+    update_cache: yes
+
+- name: Installeer php-mysql
+  apt:
+    name: php-mysql
+    state: present
+    update_cache: yes
+
+- name: Restart apache2 service
+  service: name=apache2 state=restarted
+
+- name: Installeer mysql-client
+  apt:
+    name: mysql-client
+    state: present
+    update_cache: yes
+
+- name: Configureer webpagina
+  template:
+    src: html.j2
+    dest: /var/www/html/index.php
+
+- name: Delete unnecessary .hml file
+  become: yes
+  file:
+    state: absent
+    path: /var/www/html/index.html
+...

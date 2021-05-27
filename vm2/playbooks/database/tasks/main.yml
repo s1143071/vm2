@@ -1,0 +1,83 @@
+---
+- name: Installeer mysql-server
+  apt:
+    name: mysql-server
+    update_cache: yes
+    state: present
+
+- name: Installeer python3-mysqldb
+  apt:
+    name: python3-mysqldb
+    update_cache: yes
+    state: present
+
+- name: Ensure mysql service is running
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Set root password
+  mysql_user:
+    login_user: root
+    login_password: ''
+    name: root
+    password: Welkom01!
+    priv: '*.*:ALL,GRANT'
+    state: present
+  become: yes
+
+- name: Configure my.cnf file for root
+  template:
+    src:  my.cnf
+    dest: /root/.my.cnf
+    owner: root
+    group: root
+    mode: 0600
+  become: yes
+
+- name: Restart mysql service
+  service: name=mysql state=restarted
+
+- name: Create local user
+  mysql_user: user=enes host=localhost password=Welkom01! priv=*.*:ALL,GRANT
+
+- name: Create remote user
+  mysql_user: user=enes host=% password=Welkom01! priv=*.*:ALL,GRANT
+
+- name: Configureer mysql
+  template:
+    src: mysql.cnf.j2
+    dest: /etc/mysql/my.cnf
+  become: yes
+
+- name: Restart mysql service
+  service: name=mysql state=restarted
+
+- name: Write the dump to tmp file
+  become: yes
+  copy:
+    src: basedb.sql
+    dest: /tmp/basedb.sql
+
+- name: Load the dump file
+  become: yes
+  mysql_db:
+    name: klanten
+    state: import
+    target: /tmp/basedb.sql
+  run_once: true
+
+- name: remove anonymous users
+  become: yes
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+
+- name: Delete database test
+  mysql_db:
+    name: test
+    state: absent
+...

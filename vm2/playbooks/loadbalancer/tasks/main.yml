@@ -1,0 +1,15 @@
+---
+- name: Installeer haproxy
+  apt:
+    name: haproxy
+    state: present
+    update_cache: yes
+
+- name: Configureer haproxy
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+
+- name: Restart haproxy service
+  service: name=haproxy state=restarted
+...
